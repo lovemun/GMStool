@@ -37,7 +37,7 @@ require(c("caret", "randomForest", "rrBLUP"))
 > library(tidyverse)
 > library(foreach)
 > library(iterators)
-> results = foreach(j=1:cv %dopar% GMS_main(ini_snp, init_selsnp, j, mm, 
+> results = foreach(j=1:cv %dopar% GMS_main(ini_snp, sel_snps, j, mm, 
                     cv_samples, MAF_QC$genotype, MAF_QC$phenotype, NULL, load_data$ix))
 
 ## Choose final markers and generate model
