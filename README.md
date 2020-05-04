@@ -19,10 +19,10 @@ require(c("caret", "randomForest", "rrBLUP"))
 ## Example
 ```{r}
 > library(GMStool)
-> genofile = "data/example_genotype.rds"
-> phenofile = "data/example_phenotype.rds"
-> gwasfile = "data/example_gwas.rds"
-> infofile = "data/Information.txt"
+> genofile = system.file("data/example_genotype.rds", package = "GMStool")
+> phenofile = system.file("data/example_phenotype.rds", package = "GMStool")
+> gwasfile = system.file("data/example_gwas.rds", package = "GMStool")
+> infofile = system.file("data/Information.txt", package = "GMStool")
 > cv = 5; ini_snp = 5; mm = "RRblup"; sel_snps = 1
 > load_data = load_files(genofile, phenofile, gwasfile, infofile)
 
