@@ -40,13 +40,13 @@ require(c("caret", "randomForest", "rrBLUP"))
 > library(iterators)
 > results = foreach(j=1:cv %dopar% GMS_main(ini_snps_bk = ini_snp, init_selsnp = sel_snps, j=j, cv_samples = cv_samples,
                     mm = mm, geno2 = MAF_QC$genotype, phenotype1 = MAF_QC$phenotype, preset_fname = NULL,
-                    ix = load_data$ix, allm = TRUE, cv = cv, acc1 = 0.9))
+                    ix = load_data$ix, allm = TRUE, cv = cv, acc1 = 0.9, time_cutoff = 1))
  # If not, use for loop
 > results = NULL
 > for (j in 1:cv){
     results[[j]] = GMS_main(ini_snps_bk = ini_snp, init_selsnp = sel_snps, j=j, cv_samples = cv_samples,
                     mm = mm, geno2 = MAF_QC$genotype, phenotype1 = MAF_QC$phenotype, preset_fname = NULL,
-                    ix = load_data$ix, allm = TRUE, cv = cv, acc1 = 0.9)
+                    ix = load_data$ix, allm = TRUE, cv = cv, acc1 = 0.9, time_cutoff = 1)
   }
 
 ## Choose final markers and generate model
