@@ -8,7 +8,9 @@ https://github.com/JaeYoonKim72/GMStool
 
 ## Requirement libraries
 ```{r}
-require(c("caret", "randomForest", "rrBLUP"))
+requirements <- c("caret", "randomForest", "rrBLUP")
+new.packages <- requirements[!(requirements %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 ```
 
 ## Installation
