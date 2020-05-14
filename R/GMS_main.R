@@ -83,7 +83,7 @@ GMS_main <- function(ini_snps_bk, init_selsnp, j, mm, cv_samples, geno2,
           highCorr = NULL
         } else {
           cor_mat <- cor(train_geno[,init_set][, !zv])
-          highCorr <- findCorrelation(cor_mat, 0.9)
+          highCorr <- caret::findCorrelation(cor_mat, 0.9)
         }
         if (length(highCorr) == 0){
           train_ix <- init_set
@@ -112,7 +112,7 @@ GMS_main <- function(ini_snps_bk, init_selsnp, j, mm, cv_samples, geno2,
         highCorr = NULL
       } else {
         cor_mat <- cor(train_geno[,init_set][, !zv])
-        highCorr <- findCorrelation(cor_mat, 0.9)
+        highCorr <- caret::findCorrelation(cor_mat, 0.9)
       }
       if (length(highCorr) == 0){
         train_ix <- ix1[1:ini_snps]
@@ -182,7 +182,7 @@ GMS_main <- function(ini_snps_bk, init_selsnp, j, mm, cv_samples, geno2,
       add_snps_t_ix = match(add_snps_t, init_set)
       zv <- apply(train_geno[,init_set], 2, function(x) length(unique(x)) == 1)
       cor_mat <- cor(train_geno[,init_set][, !zv])
-      highCorr <- findCorrelation(cor_mat, 0.9)
+      highCorr <- caret::findCorrelation(cor_mat, 0.9)
       if (length(highCorr) == 0){
         new_train_ix <- init_set
         add_snps <- add_snps_t
