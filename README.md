@@ -54,7 +54,6 @@ if(length(new.packages)) install.packages(new.packages)
 ## Choose final markers and generate model
 > all_train_acc <- NULL; selected_train_acc <- NULL
 > CV_results <- list(); nSamGenSum <- list(); tsum <- list(); inisum <- list()
-> results = get(x = paste0("results_", mm))
 > for (k in 1:(cv-1)){
 	all_train_acc <- c(all_train_acc, results[[k]]$all_train_acc)
 	selected_train_acc <- c(selected_train_acc, results[[k]]$selected_train_acc)
