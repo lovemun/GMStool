@@ -25,7 +25,7 @@ if(length(new.packages)) install.packages(new.packages)
 > phenofile = system.file("data/example_phenotype.rds", package = "GMStool")
 > gwasfile = system.file("data/example_gwas.rds", package = "GMStool")
 > infofile = system.file("data/Information.txt", package = "GMStool")
-> cv = 5; ini_snp = 5; mm = "RRblup"; sel_snps = 1
+> cv = 5; ini_snp = 5; mm = "RRblup"; sel_snps = 1; preset_fname = NULL
 > load_data = load_files(genofile, phenofile, gwasfile, infofile)
 
 ## MAF filtering (optional)
@@ -34,6 +34,7 @@ if(length(new.packages)) install.packages(new.packages)
 ## Cross-validation
 > cv_samples = sample(1:cv, nrow(MAF_QC$genotype), replace = TRUE)
 > N = ncol(MAF_QC$genotype)
+> t_time <- Sys.time()
 
 ## Marker selection for each cross-validation samples with multi-threads
  # In parallel computing environment, use foreach library for multithreading
@@ -72,25 +73,21 @@ if(length(new.packages)) install.packages(new.packages)
 > marker_table <- table(marker_vec)[order(table(marker_vec), decreasing = TRUE)]
 > marker_select <- names(marker_table)
 > msummary_list <- list()
-> name_tmp = NULL
-> for (m1 in mmm1){
-  tt = paste("CV-", seq(cv-1), "_", m1, sep="")
-  name_tmp = c(name_tmp, tt)
-}
+> name_tmp = paste("CV-", seq(cv), "_", mm, sep="")
 > for (iter in names(CV_results)){
   msummary_list[[iter]] = sapply(marker_select, function(x) as.integer(x %in% CV_results[[iter]]))
 }
 > marker_summary = data.frame(msummary_list, check.names = FALSE)
 > marker_summary = marker_summary[,name_tmp]
 > marker_summary = data.frame("Num"=seq(1,dim(marker_summary)[1]), "Marker"=rownames(marker_summary), marker_summary, "Total_score"=apply(marker_summary,1,sum), check.names = FALSE)
-> write.table(marker_summary, file=paste("CV_", mmm, "_Marker_scores.txt", sep=""), quote=FALSE, sep="\t", row.names = FALSE)
+> write.table(marker_summary, file=paste("CV_", mm, "_Marker_scores.txt", sep=""), quote=FALSE, sep="\t", row.names = FALSE)
 > write(marker_select, file = paste("CV_Marker_lists.txt", sep=""))
 > m_all_train_acc = round(mean(all_train_acc),6)
 > sd_all_train_acc = round(sd(all_train_acc),6)
-> add_row = c("Total", mmm, dim(geno2)[1], dim(geno2)[1], dim(geno2)[2], 
+> add_row = c("Total", mm, dim(MAF_QC$genotype)[1], dim(MAF_QC$genotype)[1], dim(MAF_QC$genotype)[2], 
 	paste(round(mean(all_train_acc), 6), " (",round(sd(all_train_acc),6),")", sep="") , 
 	paste(round(mean(selected_train_acc), 6), " (",round(sd(selected_train_acc),6),")", sep=""), length(preset_fname),
-	paste(length(unique(marker_vec)), " (", sum(table(marker_vec) == (cv-1)), ")", sep=""), "-", 
+	paste(length(unique(marker_vec)), " (", sum(table(marker_vec) == cv), ")", sep=""), "-", 
 	format(difftime(Sys.time(), t_time), usetz = TRUE)) 
 > names(all_train_acc) = name_tmp; names(selected_train_acc) = name_tmp
 > tsummary = data.frame("Corr_all_markers"=all_train_acc[names(CV_results)],
@@ -104,4 +101,4 @@ if(length(new.packages)) install.packages(new.packages)
 	"Pre_selected_markers", "Total_Selected_markers", "Initial_runtime", "Total_runtime")
 > tsummary = tsummary[order(tsummary$Model),]
 > tsummary = rbind(as.matrix(tsummary), add_row)
-> write.table(tsummary, file=paste("CV_", mmm, "_Selection_summary.txt", sep=""), quote=FALSE, sep="\t", row.names = FALSE)
+> write.table(tsummary, file=paste("CV_", mm, "_Selection_summary.txt", sep=""), quote=FALSE, sep="\t", row.names = FALSE)
